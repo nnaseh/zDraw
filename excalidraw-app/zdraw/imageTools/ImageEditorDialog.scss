@@ -1,0 +1,252 @@
+.excalidraw .zdraw-image-editor-dialog {
+  .Modal__content {
+    max-width: min(1280px, 96vw);
+  }
+}
+
+.excalidraw .zdraw-image-editor {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr) 13rem;
+  gap: 0.75rem;
+  min-height: 60vh;
+  outline: none;
+  font-family: var(--ui-font);
+  font-size: 0.8125rem;
+  color: var(--text-primary-color);
+
+  button {
+    font-family: inherit;
+  }
+
+  &__tools {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 1.875rem;
+      padding: 0 0.5rem;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      background: transparent;
+      color: inherit;
+      font-size: 0.8125rem;
+      cursor: pointer;
+
+      &:hover:not(:disabled) {
+        background: var(--button-hover-bg);
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+
+      &.is-active {
+        border-color: var(--color-primary);
+        background: var(--color-primary-light);
+      }
+
+      kbd {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.6875rem;
+        color: var(--keybinding-color);
+      }
+    }
+  }
+
+  &__sep {
+    height: 1px;
+    margin: 0.35rem 0;
+    background: var(--default-border-color);
+  }
+
+  &__stage {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  &__canvas {
+    display: block;
+    max-width: 100%;
+    max-height: 68vh;
+    margin: auto;
+    object-fit: contain;
+    touch-action: none;
+    cursor: crosshair;
+    border: 1px solid var(--default-border-color);
+    border-radius: 4px;
+    // checkerboard so transparency is visible
+    background: repeating-conic-gradient(#8884 0% 25%, transparent 0% 50%) 50% /
+      16px 16px;
+
+    &.tool-step {
+      cursor: copy;
+    }
+  }
+
+  &__statusbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: var(--keybinding-color);
+  }
+
+  &__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--default-border-color);
+    }
+
+    h4 {
+      margin: 0;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--keybinding-color);
+    }
+
+    textarea {
+      resize: vertical;
+      padding: 0.35rem 0.5rem;
+      border: 1px solid var(--input-border-color);
+      border-radius: 6px;
+      background: var(--input-bg-color);
+      color: inherit;
+      font: inherit;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--color-primary);
+    }
+  }
+
+  &__output {
+    border-bottom: none !important;
+    margin-top: auto;
+  }
+
+  &__colors {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+
+    button,
+    input[type="color"] {
+      width: 100%;
+      aspect-ratio: 1;
+      padding: 0;
+      border: 1px solid var(--default-border-color);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button[aria-pressed="true"] {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 1px;
+    }
+
+    input[type="color"] {
+      background: transparent;
+    }
+  }
+
+  &__segmented {
+    display: flex;
+    border: 1px solid var(--default-border-color);
+    border-radius: 6px;
+    overflow: hidden;
+
+    button {
+      flex: 1;
+      height: 1.75rem;
+      border: none;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+
+      & + button {
+        border-inline-start: 1px solid var(--default-border-color);
+      }
+
+      &[aria-pressed="true"] {
+        background: var(--color-primary);
+        color: var(--zdraw-accent-on, #fff);
+      }
+    }
+  }
+
+  &__row {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  &__hint {
+    color: var(--keybinding-color);
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+
+    &__tools {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+}
+
+// shared zDraw buttons (used by image tools, snapshots, export presets)
+.excalidraw .zdraw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  height: 1.875rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--default-border-color);
+  border-radius: 6px;
+  background: var(--island-bg-color-alt, transparent);
+  color: var(--text-primary-color);
+  font-family: var(--ui-font);
+  font-size: 0.8125rem;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: var(--button-hover-bg);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+
+  &--primary {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: var(--zdraw-accent-on, #fff);
+
+    &:hover:not(:disabled) {
+      background: var(--color-primary-hover);
+    }
+  }
+
+  &--danger {
+    color: var(--color-danger);
+  }
+}

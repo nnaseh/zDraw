@@ -1,0 +1,383 @@
+// zDraw design layer — "Primer-style": dense panes, hairline borders,
+// system-ui typography. Colors come from per-theme CSS variables injected by
+// ./themes.ts (html[data-zdraw-theme=...]). This file only shapes things.
+
+html[data-zdraw-theme] body {
+  background-color: var(--zdraw-page-bg, transparent);
+}
+
+// canvas color for themes that paint it via CSS (scene bg = transparent)
+html[data-zdraw-theme] .excalidraw-app .excalidraw-container {
+  background-color: var(--zdraw-canvas, transparent);
+}
+
+html[data-zdraw-dense="true"] .excalidraw,
+html[data-zdraw-dense="true"] .zdraw-themed {
+  --ui-font: system-ui, -apple-system, "Segoe UI", "Noto Sans", Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --zdraw-hairline: 0 0 0 var(--zdraw-border-width, 1px) var(--zdraw-border);
+
+  --border-radius-md: 6px;
+  --border-radius-lg: 6px;
+  --default-button-size: 1.875rem;
+  --lg-button-size: 2rem;
+  --space-factor: 0.22rem;
+
+  --shadow-island: var(--zdraw-hairline);
+  --shadow-island-stronger: var(--zdraw-hairline),
+    0 8px 24px rgba(1, 4, 9, 0.35);
+  --modal-shadow: var(--zdraw-hairline), 0 12px 32px rgba(1, 4, 9, 0.45);
+  --sidebar-shadow: var(--zdraw-hairline);
+  --library-dropdown-shadow: var(--zdraw-hairline),
+    0 8px 24px rgba(1, 4, 9, 0.35);
+  --chat-msg-shadow: var(--zdraw-hairline);
+
+  font-family: var(--ui-font);
+  font-size: 13px;
+
+  .Modal__content,
+  .Dialog .Island {
+    box-shadow: var(--modal-shadow);
+  }
+
+  .sidebar {
+    box-shadow: none;
+    border-inline-start: var(--zdraw-border-width, 1px) solid
+      var(--zdraw-border);
+  }
+
+  .dropdown-menu-container {
+    --box-shadow: var(--shadow-island-stronger);
+  }
+
+  .dropdown-menu-item:not(.dropdown-menu-item-custom) {
+    font-size: 0.8125rem;
+    height: 1.875rem;
+  }
+
+  .dropdown-menu-item-custom {
+    height: auto;
+  }
+
+  .welcome-screen-center__heading,
+  .welcome-screen-decor-hint {
+    color: var(--zdraw-text-muted, inherit);
+  }
+
+  .welcome-screen-menu-item {
+    border-radius: 6px;
+  }
+
+  // keyboard focus ring like Primer
+  :focus-visible {
+    outline: 2px solid var(--zdraw-accent, var(--color-primary));
+    outline-offset: -1px;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// zDraw app chrome (top-right tools island)
+// ---------------------------------------------------------------------------
+.excalidraw .zdraw-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--border-radius-lg);
+  background-color: var(--island-bg-color);
+  box-shadow: var(--shadow-island);
+  pointer-events: all;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    height: var(--default-button-size, 2rem);
+    padding: 0 0.6rem;
+    border: none;
+    border-radius: calc(var(--border-radius-lg) - 2px);
+    background: transparent;
+    color: var(--text-primary-color);
+    font-family: var(--ui-font);
+    font-size: 0.8125rem;
+    cursor: pointer;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    &:hover {
+      background-color: var(--button-hover-bg);
+    }
+
+    &.zdraw-toolbar__primary {
+      background-color: var(--color-primary);
+      color: var(--zdraw-accent-on, #fff);
+
+      &:hover {
+        background-color: var(--color-primary-hover);
+      }
+    }
+  }
+}
+
+// theme picker (main menu)
+.excalidraw .zdraw-theme-picker {
+  button:disabled:not([aria-checked="true"]) {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+
+  &__title {
+    font-size: 0.75rem;
+    color: var(--zdraw-text-muted, var(--color-gray-50));
+    padding: 0.25rem 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-primary-color);
+    font-family: var(--ui-font);
+    font-size: 0.75rem;
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--button-hover-bg);
+    }
+
+    &[aria-checked="true"] {
+      border-color: var(--color-primary);
+      background-color: var(--color-primary-light);
+    }
+  }
+
+  &__swatch {
+    flex: 0 0 auto;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgba(127, 127, 127, 0.6);
+  }
+}
+
+// capture dropdown
+.excalidraw .zdraw-menu {
+  position: relative;
+
+  &__list {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 15rem;
+    padding: 4px;
+    border-radius: var(--border-radius-lg);
+    background: var(--popup-bg-color, var(--island-bg-color));
+    box-shadow: var(--shadow-island-stronger);
+
+    button {
+      flex-direction: column;
+      align-items: flex-start !important;
+      gap: 0 !important;
+      height: auto !important;
+      padding: 0.4rem 0.6rem !important;
+      text-align: start;
+
+      small {
+        font-size: 0.6875rem;
+        color: var(--keybinding-color);
+      }
+    }
+  }
+}
+
+// lists used by export presets + snapshots dialogs
+.excalidraw .zdraw-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--ui-font);
+  font-size: 0.8125rem;
+  color: var(--text-primary-color);
+
+  &__hint {
+    margin: 0 0 0.5rem;
+    color: var(--keybinding-color);
+    font-size: 0.75rem;
+  }
+
+  &__item,
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--default-border-color);
+    border-radius: 6px;
+    background: var(--island-bg-color-alt, transparent);
+    color: inherit;
+    font-family: inherit;
+    text-align: start;
+
+    span {
+      display: block;
+      font-weight: 600;
+    }
+
+    small {
+      display: block;
+      color: var(--keybinding-color);
+      font-size: 0.75rem;
+    }
+  }
+
+  &__item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      border-color: var(--color-primary);
+    }
+  }
+
+  &__row > div {
+    flex: 1;
+    min-width: 0;
+
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  &__form {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+
+    input {
+      flex: 1;
+      height: 1.875rem;
+      padding: 0 0.6rem;
+      border: 1px solid var(--input-border-color);
+      border-radius: 6px;
+      background: var(--input-bg-color);
+      color: inherit;
+      font: inherit;
+    }
+  }
+}
+
+// firecrawl + brand kit dialogs
+.excalidraw .zdraw-form {
+  gap: 0.5rem;
+
+  h4 {
+    margin: 0.25rem 0 0;
+    font-size: 0.75rem;
+  }
+
+  > input:not([type="checkbox"]) {
+    height: 1.875rem;
+    padding: 0 0.6rem;
+    border: 1px solid var(--input-border-color);
+    border-radius: 6px;
+    background: var(--input-bg-color);
+    color: inherit;
+    font: inherit;
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__error {
+    margin: 0;
+    color: var(--color-danger, #f85149);
+  }
+
+  .zdraw-check {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .zdraw-brand__logo {
+    max-height: 2.5rem;
+    max-width: 8rem;
+  }
+}
+
+.excalidraw .zdraw-cheatsheet {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem 1.5rem;
+  font-family: var(--ui-font);
+  font-size: 0.8125rem;
+  color: var(--text-primary-color);
+
+  h4 {
+    margin: 0 0 0.4rem;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--keybinding-color);
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.3rem 0.75rem;
+    margin: 0;
+  }
+
+  dt {
+    white-space: nowrap;
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  kbd {
+    display: inline-block;
+    padding: 0 0.35rem;
+    border: 1px solid var(--default-border-color);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.6875rem;
+    line-height: 1.25rem;
+    background: var(--island-bg-color-alt, transparent);
+  }
+}
